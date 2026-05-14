@@ -57,7 +57,9 @@ function Dashboard() {
     (asset) => asset.condition === "damaged"
   ).length;
 
-  const recentAssets = normalizedAssets.slice(0, 5);
+  const recentAssets = [...normalizedAssets]
+  .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+  .slice(0, 5);
 
   return (
     <>
