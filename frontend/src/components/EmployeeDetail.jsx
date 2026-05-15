@@ -6,7 +6,7 @@ function EmployeeDetail() {
   const [employee, setEmployee] = useState(null);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/employees`)
+    fetch(`https://asset-management-backend-kpqm.onrender.com/api/employees`)
       .then(res => res.json())
       .then(data => {
         const emp = data.find(e => e.employeeId === employeeId);

@@ -8,7 +8,7 @@ function Employees() {
 
   // Fetch employees from backend
   useEffect(() => {
-    fetch("http://localhost:5000/api/employees")
+    fetch("https://asset-management-backend-kpqm.onrender.com/api/employees")
       .then(res => res.json())
       .then(data => setEmployees(data))
       .catch(err => console.error("Failed to fetch employees:", err));

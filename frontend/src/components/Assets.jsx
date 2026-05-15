@@ -27,7 +27,7 @@ function Assets() {
   };
 
   const fetchAssets = async () => {
-    const res = await fetch("http://localhost:5000/api/assets", {
+    const res = await fetch("https://asset-management-backend-kpqm.onrender.com/api/assets", {
       headers: getAuthHeaders(),
     });
 
@@ -53,7 +53,7 @@ function Assets() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const res = await fetch("http://localhost:5000/api/assets", {
+    const res = await fetch("https://asset-management-backend-kpqm.onrender.com/api/assets", {
       method: "POST",
       headers: getAuthHeaders(),
       body: JSON.stringify(formData),
@@ -81,7 +81,7 @@ function Assets() {
       return;
     }
 
-    const res = await fetch(`http://localhost:5000/api/assets/${id}/assign`, {
+    const res = await fetch(`https://asset-management-backend-kpqm.onrender.com/api/assets/${id}/assign`, {
       method: "PUT",
       headers: getAuthHeaders(),
       body: JSON.stringify({ assignedTo }),
@@ -99,7 +99,7 @@ function Assets() {
   const deleteAsset = async (id) => {
     if (!window.confirm("Are you sure?")) return;
 
-    await fetch(`http://localhost:5000/api/assets/${id}`, {
+    await fetch(`https://asset-management-backend-kpqm.onrender.com/api/assets/${id}`, {
       method: "DELETE",
       headers: getAuthHeaders(),
     });
@@ -108,7 +108,7 @@ function Assets() {
   };
 
   const updateAsset = async (id) => {
-    const res = await fetch(`http://localhost:5000/api/assets/${id}`, {
+    const res = await fetch(`https://asset-management-backend-kpqm.onrender.com/api/assets/${id}`, {
       method: "PUT",
       headers: getAuthHeaders(),
       body: JSON.stringify(editData),

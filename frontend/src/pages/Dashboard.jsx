@@ -18,7 +18,7 @@ function Dashboard() {
 
   const fetchAssets = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/assets", {
+      const res = await fetch("https://asset-management-backend-kpqm.onrender.com/api/assets", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
