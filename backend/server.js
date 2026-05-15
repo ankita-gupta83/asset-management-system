@@ -15,7 +15,11 @@ const app = express();
 connectDB();
 
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin:
+    [
+      "http://localhost:5173",
+      "https://asset-management-system-sandy.vercel.app",
+    ],
   credentials: true
 }));
 
