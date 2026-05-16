@@ -2,6 +2,8 @@
 
 A full stack MERN application designed to manage, assign, and track organizational assets efficiently in real time. The system centralizes asset records, improves visibility, and reduces manual tracking efforts through an intuitive dashboard interface.
 
+Live Demo: https://asset-management-system-sandy.vercel.app
+
 ## Tech Stack
 
 
