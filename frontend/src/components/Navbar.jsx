@@ -1,13 +1,16 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 function Navbar() {
   const navigate = useNavigate();
+  const location = useLocation();
+
   const [user, setUser] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
+
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
@@ -21,156 +24,227 @@ function Navbar() {
 
   const getInitials = (name = "") => {
     const words = name.trim().split(" ");
+
     if (words.length === 1) return words[0][0];
+
     return words[0][0] + words[words.length - 1][0];
   };
 
+  const navLinkStyle = (path) =>
+    `px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${location.pathname === path
+      ? "bg-gray-900 text-white shadow-sm"
+      : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+    }`;
+
   return (
     <>
-      {/* Top Navbar */}
-      <nav className="bg-white border-b border-gray-100 px-6 py-4 flex justify-between items-center">
-        <h1 className="text-lg font-semibold text-gray-800 tracking-wide">
-          Asset Manager
-        </h1>
+      {/* Navbar */}
+      <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-100">
+        <nav className="max-w-7xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
 
-        {/* Desktop Menu */}
-        <div className="hidden md:flex items-center gap-6 text-sm text-gray-600">
-          {!user ? (
-            <>
-              <Link to="/login" className="hover:text-gray-900">
-                Login
-              </Link>
-              <Link
-                to="/signup"
-                className="px-4 py-1.5 rounded-lg border border-gray-200 hover:bg-gray-100 text-gray-800"
-              >
-                Signup
-              </Link>
-            </>
-          ) : (
-            <>
+          {/* Left Logo */}
+          <div
+            onClick={() => navigate("/")}
+            className="flex items-center gap-3 cursor-pointer"
+          >
+            <div className="w-10 h-10 rounded-2xl overflow-hidden shadow-sm border border-gray-200 bg-white flex items-center justify-center">
+              <img
+                src="/images/favicon.png"
+                alt="Logo"
+                className="w-full h-full object-cover"
+              />
+            </div>
 
-              <Link to="/" className="hover:text-gray-900">
+            <div>
+              <h1 className="text-sm md:text-base font-semibold text-gray-900 leading-none">
+                Asset Manager
+              </h1>
+
+              <p className="text-[11px] text-gray-500 mt-1 hidden sm:block">
+                Smart asset workspace
+              </p>
+            </div>
+          </div>
+
+          {/* Center Navigation */}
+          {user && (
+            <div className="hidden md:flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-2xl p-1">
+              <Link to="/dash" className={navLinkStyle("/dash")}>
+                Dashboard
+              </Link>
+
+              <Link to="/" className={navLinkStyle("/")}>
                 Home
               </Link>
 
-              <Link to="/assets" className="hover:text-gray-900">
+              <Link
+                to="/assets"
+                className={navLinkStyle("/assets")}
+              >
                 Assets
               </Link>
-
-              <button
-                onClick={logoutHandler}
-                className="text-red-500 hover:text-red-600"
-              >
-                Logout
-              </button>
-              
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-full bg-gray-900 text-white flex items-center justify-center text-sm font-medium">
-                  {getInitials(user.name)}
-                </div>
-                <span className="font-medium text-gray-900">
-                  {user.name}
-                </span>
-              </div>
-            </>
+            </div>
           )}
-        </div>
 
-        {/* Mobile Hamburger */}
-        <button
-          onClick={() => setMenuOpen(true)}
-          className="md:hidden text-gray-700 text-xl"
-        >
-          ☰
-        </button>
-      </nav>
+          {/* Right Section */}
+          <div className="hidden md:flex items-center gap-4">
+            {!user ? (
+              <>
+                <Link
+                  to="/login"
+                  className="text-sm text-gray-600 hover:text-gray-900 transition"
+                >
+                  Login
+                </Link>
+
+                <Link
+                  to="/signup"
+                  className="px-4 py-2 rounded-xl bg-gray-900 text-white text-sm font-medium hover:bg-gray-800 transition"
+                >
+                  Signup
+                </Link>
+              </>
+            ) : (
+              <>
+                {/* User */}
+                <div className="flex items-center gap-3">
+                  <div className="relative">
+                    <div className="w-10 h-10 rounded-full bg-gray-900 text-white flex items-center justify-center text-sm font-medium">
+                      {getInitials(user.name)}
+                    </div>
+
+                    <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>
+                  </div>
+
+                  <div className="hidden lg:block">
+                    <p className="text-sm font-medium text-gray-900">
+                      {user.name}
+                    </p>
+
+                    <p className="text-xs text-gray-500">
+                      Logged in
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  onClick={logoutHandler}
+                  className="px-4 py-2 rounded-xl text-sm font-medium text-red-500 hover:bg-red-50 transition"
+                >
+                  Logout
+                </button>
+              </>
+            )}
+          </div>
+
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setMenuOpen(true)}
+            className="md:hidden w-10 h-10 rounded-xl border border-gray-200 flex items-center justify-center text-gray-700 hover:bg-gray-100 transition"
+          >
+            ☰
+          </button>
+        </nav>
+      </header>
 
       {/* Overlay */}
       {menuOpen && (
         <div
-          className="fixed inset-0 bg-black/30 z-40 md:hidden"
+          className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40 md:hidden"
           onClick={() => setMenuOpen(false)}
         />
       )}
 
-      {/* Right Sidebar */}
+      {/* Mobile Sidebar */}
       <aside
         className={`fixed top-0 right-0 h-full w-72 bg-white z-50 md:hidden
-        transform transition-transform duration-300
+        transition-transform duration-300 ease-out shadow-2xl
         ${menuOpen ? "translate-x-0" : "translate-x-full"}`}
       >
-        <div className="p-5 space-y-6">
-          {/* Sidebar Header */}
-          <div className="flex justify-between items-start border-b pb-4">
-            <div>
-              <h2 className="text-base font-semibold text-gray-800">
-                Welcome to Asset Manager
-              </h2>
-              <p className="text-xs text-gray-500 mt-1">
-                {!user
-                  ? "Access your account or get started"
-                  : "Quick access to your workspace"}
-              </p>
+        <div className="p-5 flex flex-col h-full">
 
+          {/* Header */}
+          <div className="flex items-center justify-between border-b border-gray-100 pb-5">
+            <div>
+              <h2 className="font-semibold text-gray-900">
+                Asset Manager
+              </h2>
+
+              <p className="text-xs text-gray-500 mt-1">
+                Manage your workspace
+              </p>
             </div>
+
             <button
               onClick={() => setMenuOpen(false)}
-              className="text-gray-500 text-lg"
+              className="w-9 h-9 rounded-lg hover:bg-gray-100 text-gray-500 transition"
             >
               ✕
             </button>
           </div>
 
-          {/* Logged Out */}
           {!user ? (
-            <div className="space-y-3 text-sm">
+            <div className="mt-6 space-y-3">
               <Link
                 to="/login"
                 onClick={() => setMenuOpen(false)}
-                className="block w-full text-center px-4 py-2.5 rounded-lg border border-gray-200 hover:bg-gray-100 font-medium"
+                className="block text-center py-3 rounded-xl border border-gray-200 hover:bg-gray-50 transition"
               >
-                Login to your account
+                Login
               </Link>
 
               <Link
                 to="/signup"
                 onClick={() => setMenuOpen(false)}
-                className="block w-full text-center px-4 py-2.5 rounded-lg bg-gray-900 text-white hover:bg-gray-800 font-medium"
+                className="block text-center py-3 rounded-xl bg-gray-900 text-white hover:bg-gray-800 transition"
               >
-                Create new account
+                Create Account
               </Link>
             </div>
           ) : (
             <>
-              {/* User */}
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-gray-900 text-white flex items-center justify-center font-medium">
-                  {getInitials(user.name)}
-                </div>
-                <div>
-                  <p className="font-medium text-gray-900">
-                    {user.name}
-                  </p>
-                  <p className="text-xs text-gray-500">
-                    Logged in
-                  </p>
+              {/* User Card */}
+              <div className="mt-6 p-4 rounded-2xl bg-gray-50 border border-gray-100">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-full bg-gray-900 text-white flex items-center justify-center font-medium">
+                    {getInitials(user.name)}
+                  </div>
+
+                  <div>
+                    <p className="font-medium text-gray-900">
+                      {user.name}
+                    </p>
+
+                    <p className="text-xs text-gray-500">
+                      Welcome back
+                    </p>
+                  </div>
                 </div>
               </div>
 
-              {/* Links */}
-              <nav className="space-y-2 text-sm">
+              {/* Navigation */}
+              <nav className="mt-6 flex flex-col space-y-2">
                 <Link
                   to="/"
                   onClick={() => setMenuOpen(false)}
-                  className="block px-3 py-2 rounded-lg hover:bg-gray-100"
+                  className={navLinkStyle("/")}
                 >
                   Home
                 </Link>
+
+                <Link
+                  to="/dash"
+                  onClick={() => setMenuOpen(false)}
+                  className={navLinkStyle("/dash")}
+                >
+                  Dashboard
+                </Link>
+
+
                 <Link
                   to="/assets"
                   onClick={() => setMenuOpen(false)}
-                  className="block px-3 py-2 rounded-lg hover:bg-gray-100"
+                  className={navLinkStyle("/assets")}
                 >
                   Assets
                 </Link>
@@ -180,11 +254,16 @@ function Navbar() {
                     setMenuOpen(false);
                     logoutHandler();
                   }}
-                  className="block w-full text-left px-3 py-2 rounded-lg text-red-500 hover:bg-red-50"
+                  className="w-full text-left px-4 py-3 rounded-xl text-sm font-medium text-red-500 hover:bg-red-50 transition"
                 >
                   Logout
                 </button>
               </nav>
+
+              {/* Footer */}
+              <div className="mt-auto pt-6 text-center text-xs text-gray-400">
+                Asset Manager System
+              </div>
             </>
           )}
         </div>

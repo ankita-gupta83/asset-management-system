@@ -5,9 +5,6 @@ import connectDB from "./config/db.js";
 import assetRoutes from "./routes/assetRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 
-
-
-
 dotenv.config();
 
 const app = express();
